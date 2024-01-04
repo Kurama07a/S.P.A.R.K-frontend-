@@ -5,9 +5,30 @@ import CircularImage from '../components/circularimage'
 import '../styles/dashboard.css'
 import Scheduletable from '../components/schedule/scheduletable'
 import Gradestable from '../components/grades/gradestable'
+import Navbar from '../components/navbar'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
 export default function Dashboard() {
+
+ const navigate = useNavigate();
+  useEffect(()=>{
+    const unsubscribe = auth.onAuthStateChanged(user => {
+        if (user) {
+          // User is signed in, do nothing or perform necessary actions
+        } else {
+          // User is not signed in, navigate to the default app page
+          navigate('/');
+        }
+      });
+  
+      // Clean up the listener when the component unmounts
+      return () => unsubscribe();
+    }, [navigate]);
+
   return (
   <div>
+    <Navbar />
     <Hero />
     <CircularImage />
     <section className='sec'>
